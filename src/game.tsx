@@ -112,8 +112,13 @@ const determineGameResult = (state: GameState): GameResult => {
 
 //Player Actions
 const playerStands = (state: GameState): GameState => {
+  const dealerDraw = calculateHandScore(state.dealerHand) <= 16
+  const { card, remaining } = takeCard(state.cardDeck);
+
   return {
     ...state,
+    cardDeck: dealerDraw ? remaining : state.cardDeck,
+    dealerHand: dealerDraw ? [...state.dealerHand, card] : state.dealerHand,
     turn: "dealer_turn",
   };
 };
