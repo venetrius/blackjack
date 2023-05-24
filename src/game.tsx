@@ -57,9 +57,32 @@ const setupGame = (): GameState => {
   };
 };
 
+const CardValues: { [rank in CardRank]: number } = {
+  [CardRank.Ace]: 11,
+  [CardRank.Two]: 2,
+  [CardRank.Three]: 3,
+  [CardRank.Four]: 4,
+  [CardRank.Five]: 5,
+  [CardRank.Six]: 6,
+  [CardRank.Seven]: 7,
+  [CardRank.Eight]: 8,
+  [CardRank.Nine]: 9,
+  [CardRank.Ten]: 10,
+  [CardRank.Jack]: 10,
+  [CardRank.Queen]: 10,
+  [CardRank.King]: 10
+};
+
 //Scoring
 const calculateHandScore = (hand: Hand): number => {
-  return 0;
+  // should not use number but constants for 21 10 etc
+  let numberOfAces = hand.filter(card => card.rank === CardRank.Ace).length
+  let currentHandValue = hand.reduce((accumulator, card) => accumulator + CardValues[card.rank], 0);
+  while(currentHandValue > 21 && numberOfAces > 0) {
+    numberOfAces--
+    currentHandValue -= 10
+  }
+  return currentHandValue
 };
 
 const determineGameResult = (state: GameState): GameResult => {
