@@ -85,8 +85,29 @@ const calculateHandScore = (hand: Hand): number => {
   return currentHandValue
 };
 
+const hasBlackJack = (hand: Hand) :boolean => {
+  const playerScore = calculateHandScore(hand)
+  return playerScore === 21 && hand.length === 2;
+}
+
 const determineGameResult = (state: GameState): GameResult => {
-  return "no_result";
+
+  if(calculateHandScore(state.playerHand) > 21) {
+    return 'dealer_win'
+  }
+  if(calculateHandScore(state.dealerHand) > 21) {
+    return "player_win"
+  }
+
+  const dealerScore = calculateHandScore(state.dealerHand)
+  const playerScore = calculateHandScore(state.playerHand)
+  const dealerBlackJack = hasBlackJack(state.dealerHand)
+  const playerBlackJack = hasBlackJack(state.playerHand)
+
+  // check if only player has black jack, othervise it is a draw
+  if(dealerScore === playerScore && (dealerBlackJack == playerBlackJack || dealerBlackJack)) return "draw"
+  if(dealerScore > playerScore) return "dealer_win"
+  return "player_win"
 };
 
 //Player Actions
